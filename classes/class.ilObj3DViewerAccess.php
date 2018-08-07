@@ -1,7 +1,7 @@
 <?php
 
 include_once("./Services/Repository/classes/class.ilObjectPluginAccess.php");
-require_once("./Customizing/global/plugins/Services/Repository/RepositoryObject/TestRepositoryObject/classes/class.ilObjTestRepositoryObject.php");
+require_once("./Customizing/global/plugins/Services/Repository/RepositoryObject/3DViewer/classes/class.ilObj3DViewer.php");
 require_once("./Services/AccessControl/interfaces/interface.ilConditionHandling.php");
 
 /**
@@ -12,7 +12,7 @@ require_once("./Services/AccessControl/interfaces/interface.ilConditionHandling.
  * @author                    Oskar Truffer <ot@studer-raimann.ch>
  * @version $Id$
  */
-class ilObjTestRepositoryObjectAccess extends ilObjectPluginAccess implements ilConditionHandling
+class ilObj3DViewerAccess extends ilObjectPluginAccess implements ilConditionHandling
 {
 
     /**
@@ -38,7 +38,7 @@ class ilObjTestRepositoryObjectAccess extends ilObjectPluginAccess implements il
     public static function checkCondition($a_trigger_obj_id, $a_operator, $a_value, $a_usr_id)
     {
         $ref_id = array_shift(ilObject::_getAllReferences($a_trigger_obj_id));
-        $object = new ilObjTestRepositoryObject($ref_id);
+        $object = new ilObj3DViewer($ref_id);
         switch ($a_operator) {
             case ilConditionHandler::OPERATOR_PASSED:
                 return $object->getLPStatusForUser($a_usr_id) == ilLPStatus::LP_STATUS_COMPLETED_NUM;
@@ -72,7 +72,7 @@ class ilObjTestRepositoryObjectAccess extends ilObjectPluginAccess implements il
 
         switch ($a_permission) {
             case "read":
-                if (!ilObjTestRepositoryObjectAccess::checkOnline($a_obj_id) &&
+                if (!ilObj3DViewerAccess::checkOnline($a_obj_id) &&
                     !$ilAccess->checkAccessOfUser($a_user_id, "write", "", $a_ref_id)) {
                     return false;
                 }

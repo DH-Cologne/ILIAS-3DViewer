@@ -3,11 +3,11 @@
 require_once("./Services/Export/classes/class.ilXmlExporter.php");
 
 /**
- * Class ilTestRepositoryObjectExporter
+ * Class il3DViewerExporter
  *
  * @author Oskar Truffer <ot@studer-raimann.ch>
  */
-class ilTestRepositoryObjectExporter extends ilXmlExporter
+class il3DViewerExporter extends ilXmlExporter
 {
 
     /**
@@ -22,7 +22,7 @@ class ilTestRepositoryObjectExporter extends ilXmlExporter
     {
         $ref_ids = ilObject::_getAllReferences($a_id);
         $ref_id = array_shift($ref_ids);
-        $entity = new ilObjTestRepositoryObject($ref_id);
+        $entity = new ilObj3DViewer($ref_id);
 
         include_once "./Services/Xml/classes/class.ilXmlWriter.php";
         $writer = new ilXmlWriter();
@@ -60,7 +60,7 @@ class ilTestRepositoryObjectExporter extends ilXmlExporter
     {
         return array(
             "5.2.0" => array(
-                "namespace" => "http://www.ilias.de/Plugins/TestRepositoryObject/md/5_2",
+                "namespace" => "http://www.ilias.de/Plugins/3DViewer/md/5_2",
                 "xsd_file" => "ilias_md_5_2.xsd",
                 "min" => "5.2.0",
                 "max" => "")

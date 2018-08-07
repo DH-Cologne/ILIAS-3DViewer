@@ -1,15 +1,15 @@
 <?php
 
 require_once("./Services/Export/classes/class.ilXmlImporter.php");
-require_once("./Customizing/global/plugins/Services/Repository/RepositoryObject/TestRepositoryObject/classes/class.ilObjTestRepositoryObject.php");
-require_once("./Customizing/global/plugins/Services/Repository/RepositoryObject/TestRepositoryObject/classes/class.ilTestRepositoryObjectPlugin.php");
+require_once("./Customizing/global/plugins/Services/Repository/RepositoryObject/3DViewer/classes/class.ilObj3DViewer.php");
+require_once("./Customizing/global/plugins/Services/Repository/RepositoryObject/3DViewer/classes/class.il3DViewerPlugin.php");
 
 /**
- * Class ilTestRepositoryObjectImporter
+ * Class il3DViewerImporter
  *
  * @author Oskar Truffer <ot@studer-raimann.ch>
  */
-class ilTestRepositoryObjectImporter extends ilXmlImporter
+class il3DViewerImporter extends ilXmlImporter
 {
 
     /**
@@ -23,8 +23,8 @@ class ilTestRepositoryObjectImporter extends ilXmlImporter
     public function importXmlRepresentation($a_entity, $a_id, $a_xml, $a_mapping)
     {
         $xml = simplexml_load_string($a_xml);
-        $pl = new ilTestRepositoryObjectPlugin();
-        $entity = new ilObjTestRepositoryObject();
+        $pl = new il3DViewerPlugin();
+        $entity = new ilObj3DViewer();
         $entity->setTitle((string)$xml->title . " " . $pl->txt("copy"));
         $entity->setDescription((string)$xml->description);
         $entity->setOnline((string)$xml->online);

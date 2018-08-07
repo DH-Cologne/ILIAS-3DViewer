@@ -7,15 +7,15 @@ require_once("./Services/Form/classes/class.ilCheckboxInputGUI.php");
 require_once("./Services/Tracking/classes/class.ilLearningProgress.php");
 require_once("./Services/Tracking/classes/class.ilLPStatusWrapper.php");
 require_once("./Services/Tracking/classes/status/class.ilLPStatusPlugin.php");
-require_once("./Customizing/global/plugins/Services/Repository/RepositoryObject/TestRepositoryObject/classes/class.ilTestRepositoryObjectPlugin.php");
+require_once("./Customizing/global/plugins/Services/Repository/RepositoryObject/3DViewer/classes/class.il3DViewerPlugin.php");
 require_once("./Services/Form/classes/class.ilPropertyFormGUI.php");
 require_once("./Services/Form/classes/class.ilNonEditableValueGUI.php");
 
 /**
- * @ilCtrl_isCalledBy ilObjTestRepositoryObjectGUI: ilRepositoryGUI, ilAdministrationGUI, ilObjPluginDispatchGUI
- * @ilCtrl_Calls ilObjTestRepositoryObjectGUI: ilPermissionGUI, ilInfoScreenGUI, ilObjectCopyGUI, ilCommonActionDispatcherGUI, ilExportGUI
+ * @ilCtrl_isCalledBy ilObj3DViewerGUI: ilRepositoryGUI, ilAdministrationGUI, ilObjPluginDispatchGUI
+ * @ilCtrl_Calls ilObj3DViewerGUI: ilPermissionGUI, ilInfoScreenGUI, ilObjectCopyGUI, ilCommonActionDispatcherGUI, ilExportGUI
  */
-class ilObjTestRepositoryObjectGUI extends ilObjectPluginGUI
+class ilObj3DViewerGUI extends ilObjectPluginGUI
 {
     const LP_SESSION_ID = 'xtst_lp_session_state';
     /** @var  ilTemplate */
@@ -30,7 +30,7 @@ class ilObjTestRepositoryObjectGUI extends ilObjectPluginGUI
      */
     final function getType()
     {
-        return ilTestRepositoryObjectPlugin::ID;
+        return il3DViewerPlugin::ID;
     }
 
     /**
@@ -184,7 +184,7 @@ class ilObjTestRepositoryObjectGUI extends ilObjectPluginGUI
     }
 
     /**
-     * @param $object ilObjTestRepositoryObject
+     * @param $object ilObj3DViewer
      * @param $form ilPropertyFormGUI
      */
     private function fillObject($object, $form)
@@ -198,7 +198,7 @@ class ilObjTestRepositoryObjectGUI extends ilObjectPluginGUI
     {
         $this->tabs->activateTab("content");
 
-        /** @var ilObjTestRepositoryObject $object */
+        /** @var ilObj3DViewer $object */
         $object = $this->object;
 
         $form = new ilPropertyFormGUI();

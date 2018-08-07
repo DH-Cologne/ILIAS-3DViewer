@@ -9,7 +9,7 @@ include_once "./Services/Repository/classes/class.ilObjectPluginListGUI.php";
  * PLEASE do not create instances of larger classes here. Use the
  * ...Access class to get DB data and keep it small.
  */
-class ilObjTestRepositoryObjectListGUI extends ilObjectPluginListGUI
+class ilObj3DViewerListGUI extends ilObjectPluginListGUI
 {
 
     /**
@@ -17,7 +17,7 @@ class ilObjTestRepositoryObjectListGUI extends ilObjectPluginListGUI
      */
     function initType()
     {
-        $this->setType(ilTestRepositoryObjectPlugin::ID);
+        $this->setType(il3DViewerPlugin::ID);
     }
 
     /**
@@ -25,7 +25,7 @@ class ilObjTestRepositoryObjectListGUI extends ilObjectPluginListGUI
      */
     function getGuiClass()
     {
-        return "ilObjTestRepositoryObjectGUI";
+        return "ilObj3DViewerGUI";
     }
 
     /**
@@ -61,8 +61,8 @@ class ilObjTestRepositoryObjectListGUI extends ilObjectPluginListGUI
 
         $props = array();
 
-        $this->plugin->includeClass("class.ilObjTestRepositoryObjectAccess.php");
-        if (!ilObjTestRepositoryObjectAccess::checkOnline($this->obj_id)) {
+        $this->plugin->includeClass("class.ilObj3DViewerAccess.php");
+        if (!ilObj3DViewerAccess::checkOnline($this->obj_id)) {
             $props[] = array("alert" => true, "property" => $this->txt("status"),
                 "value" => $this->txt("offline"));
         }
