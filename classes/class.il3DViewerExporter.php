@@ -26,11 +26,11 @@ class il3DViewerExporter extends ilXmlExporter
 
         include_once "./Services/Xml/classes/class.ilXmlWriter.php";
         $writer = new ilXmlWriter();
-        $writer->xmlStartTag("xtst");
+        $writer->xmlStartTag("x3dv");
         $writer->xmlElement("title", null, $entity->getTitle());
         $writer->xmlElement("description", null, $entity->getDescription());
         $writer->xmlElement("online", null, $entity->isOnline());
-        $writer->xmlEndTag("xtst");
+        $writer->xmlEndTag("x3dv");
 
         return $writer->xmlDumpMem(false);
     }

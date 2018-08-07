@@ -1,20 +1,20 @@
-obj_xtst#:#Test Repository Object
-objs_xtst#:#Test Repository Objects
-obj_xtst_duplicate#:#Kopieren
-objs_xtst_duplicate#:#Kopiere Test Repository Objects
-obj_xtst_select#:#Wähle Test Repository Object
-xtst_add#:#Test Repository Object hinzufügen
-xtst_new#:#Neues Test Repository Object
-xtst_read#:#Lesezugriff auf Test Repository Object
-xtst_write#:#Test Repository Object bearbeiten
-xtst_delete#:#Test Repository Object löschen
-xtst_visible#:#Test Repository Object ist sichtbar
-xtst_edit_permission#:#Zugriffsrecht bearbeiten
-crs_create_xtst#:#Erstelle Test Repository Object
-grp_create_xtst#:#Erstelle Test Repository Object
-fold_create_xtst#:#Erstelle Test Repository Object
-root_create_xtst#:#Erstelle Test Repository Object
-cat_create_xtst#:#Erstelle Test Repository Object
+obj_x3dv#:#Test Repository Object
+objs_x3dv#:#Test Repository Objects
+obj_x3dv_duplicate#:#Kopieren
+objs_x3dv_duplicate#:#Kopiere Test Repository Objects
+obj_x3dv_select#:#Wähle Test Repository Object
+x3dv_add#:#Test Repository Object hinzufügen
+x3dv_new#:#Neues Test Repository Object
+x3dv_read#:#Lesezugriff auf Test Repository Object
+x3dv_write#:#Test Repository Object bearbeiten
+x3dv_delete#:#Test Repository Object löschen
+x3dv_visible#:#Test Repository Object ist sichtbar
+x3dv_edit_permission#:#Zugriffsrecht bearbeiten
+crs_create_x3dv#:#Erstelle Test Repository Object
+grp_create_x3dv#:#Erstelle Test Repository Object
+fold_create_x3dv#:#Erstelle Test Repository Object
+root_create_x3dv#:#Erstelle Test Repository Object
+cat_create_x3dv#:#Erstelle Test Repository Object
 title#:#Titel
 description#:#Beschreibung
 online#:#Online

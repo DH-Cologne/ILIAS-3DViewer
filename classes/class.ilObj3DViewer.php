@@ -32,15 +32,17 @@ class ilObj3DViewer extends ilObjectPlugin implements ilLPStatusPluginInterface
      */
     function doCreate()
     {
+        /* No need
         global $ilDB;
 
-        $ilDB->manipulate("INSERT INTO rep_robj_xtst_data " .
+        $ilDB->manipulate("INSERT INTO rep_robj_x3dv_data " .
             "(id, is_online, option_one, option_two) VALUES (" .
             $ilDB->quote($this->getId(), "integer") . "," .
             $ilDB->quote(0, "integer") . "," .
             $ilDB->quote("default 1", "text") . "," .
             $ilDB->quote("default 2", "text") .
             ")");
+        */
     }
 
     /**
@@ -48,14 +50,16 @@ class ilObj3DViewer extends ilObjectPlugin implements ilLPStatusPluginInterface
      */
     function doRead()
     {
+        /* No need
         global $ilDB;
 
-        $set = $ilDB->query("SELECT * FROM rep_robj_xtst_data " .
+        $set = $ilDB->query("SELECT * FROM rep_robj_x3dv_data " .
             " WHERE id = " . $ilDB->quote($this->getId(), "integer")
         );
         while ($rec = $ilDB->fetchAssoc($set)) {
             $this->setOnline($rec["is_online"]);
         }
+        */
     }
 
     /**
@@ -73,12 +77,14 @@ class ilObj3DViewer extends ilObjectPlugin implements ilLPStatusPluginInterface
      */
     function doUpdate()
     {
+        /*
         global $ilDB;
 
-        $ilDB->manipulate($up = "UPDATE rep_robj_xtst_data SET " .
+        $ilDB->manipulate($up = "UPDATE rep_robj_x3dv_data SET " .
             " is_online = " . $ilDB->quote($this->isOnline(), "integer") . "" .
             " WHERE id = " . $ilDB->quote($this->getId(), "integer")
         );
+        */
     }
 
     /**
@@ -96,11 +102,13 @@ class ilObj3DViewer extends ilObjectPlugin implements ilLPStatusPluginInterface
      */
     function doDelete()
     {
+        /*
         global $ilDB;
 
-        $ilDB->manipulate("DELETE FROM rep_robj_xtst_data WHERE " .
+        $ilDB->manipulate("DELETE FROM rep_robj_x3dv_data WHERE " .
             " id = " . $ilDB->quote($this->getId(), "integer")
         );
+        */
     }
 
     /**
@@ -108,12 +116,14 @@ class ilObj3DViewer extends ilObjectPlugin implements ilLPStatusPluginInterface
      */
     function doCloneObject($new_obj, $a_target_id, $a_copy_id = null)
     {
+        /*
         global $ilDB;
 
         $new_obj->setOnline($this->isOnline());
         $new_obj->setOptionOne($this->getOptionOne());
         $new_obj->setOptionTwo($this->getOptionTwo());
         $new_obj->update();
+        */
     }
 
     /**

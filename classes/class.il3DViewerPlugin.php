@@ -6,12 +6,13 @@ include_once("./Services/Repository/classes/class.ilRepositoryObjectPlugin.php")
  */
 class il3DViewerPlugin extends ilRepositoryObjectPlugin
 {
-    const ID = "xtst";
+    const ID = "x3dv";
+    const PLUGIN_NAME = "3DViewer";
 
     // must correspond to the plugin subdirectory
     function getPluginName()
     {
-        return "3DViewer";
+        return self::PLUGIN_NAME;
     }
 
     protected function uninstallCustom()

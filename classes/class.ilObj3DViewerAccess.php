@@ -90,7 +90,7 @@ class ilObj3DViewerAccess extends ilObjectPluginAccess implements ilConditionHan
     {
         global $ilDB;
 
-        $set = $ilDB->query("SELECT is_online FROM rep_robj_xtst_data " .
+        $set = $ilDB->query("SELECT is_online FROM rep_robj_x3dv_data " .
             " WHERE id = " . $ilDB->quote($a_id, "integer")
         );
         $rec = $ilDB->fetchAssoc($set);

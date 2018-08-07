@@ -31,7 +31,7 @@ class il3DViewerImporter extends ilXmlImporter
         $entity->setImportId($a_id);
         $entity->create();
         $new_id = $entity->getId();
-        $a_mapping->addMapping("Plugins/TestObjectRepository", "xtst", $a_id, $new_id);
+        $a_mapping->addMapping("Plugins/TestObjectRepository", "x3dv", $a_id, $new_id);
         return $new_id;
     }
 }

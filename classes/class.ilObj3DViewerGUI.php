@@ -17,7 +17,7 @@ require_once("./Services/Form/classes/class.ilNonEditableValueGUI.php");
  */
 class ilObj3DViewerGUI extends ilObjectPluginGUI
 {
-    const LP_SESSION_ID = 'xtst_lp_session_state';
+    const LP_SESSION_ID = 'x3dv_lp_session_state';
     /** @var  ilTemplate */
     public $tpl;
     /** @var  ilCtrl */
@@ -39,14 +39,29 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
     function performCommand($cmd)
     {
         switch ($cmd) {
-            case "editProperties":   // list all commands that need write permission here
+            case "editProperties":
+                $this->editProperties();
+                break;  // list all commands that need write permission here
             case "updateProperties":
+                break;
             case "saveProperties":
-            case "showContent":   // list all commands that need read permission here
+                $this->saveProperties();
+                break;
+            case "showContent":
+                $this->showContent();
+                break;   // list all commands that need read permission here
             case "setStatusToCompleted":
+                $this->setStatusToCompleted();
+                break;
             case "setStatusToFailed":
+                $this->setStatusToFailed();
+                break;
             case "setStatusToInProgress":
+                $this->setStatusToInProgress();
+                break;
             case "setStatusToNotAttempted":
+                $this->setStatusToNotAttempted();
+                break;
                 $this->checkPermission("read");
                 $this->$cmd();
                 break;
@@ -137,7 +152,7 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
     protected function initPropertiesForm()
     {
         $form = new ilPropertyFormGUI();
-        $form->setTitle($this->plugin->txt("obj_xtst"));
+        $form->setTitle($this->plugin->txt("obj_x3dv"));
 
         $title = new ilTextInputGUI($this->plugin->txt("title"), "title");
         $title->setRequired(true);
@@ -204,43 +219,8 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
         $form = new ilPropertyFormGUI();
         $form->setTitle($object->getTitle());
 
-        $i = new ilNonEditableValueGUI($this->plugin->txt("title"));
-        $i->setInfo($object->getTitle());
-        $form->addItem($i);
-
-        $i = new ilNonEditableValueGUI($this->plugin->txt("description"));
-        $i->setInfo($object->getDescription());
-        $form->addItem($i);
-
-        $i = new ilNonEditableValueGUI($this->plugin->txt("online_status"));
-        $i->setInfo($object->isOnline() ? "Online" : "Offline");
-        $form->addItem($i);
-
-        global $ilUser;
-        $progress = new ilLPStatusPlugin($this->object->getId());
-        $status = $progress->determineStatus($this->object->getId(), $ilUser->getId());
-        $i = new ilNonEditableValueGUI($this->plugin->txt("lp_status"));
-        $i->setInfo($this->plugin->txt("lp_status_" . $status));
-        $form->addItem($i);
-
         $i = new ilNonEditableValueGUI();
-        $i->setInfo("<a href='" . $this->ctrl->getLinkTarget($this, "setStatusToCompleted") . "'> " . $this->plugin->txt("set_completed"));
-        $form->addItem($i);
-
-        $i = new ilNonEditableValueGUI();
-        $i->setInfo("<a href='" . $this->ctrl->getLinkTarget($this, "setStatusToNotAttempted") . "'> " . $this->plugin->txt("set_not_attempted"));
-        $form->addItem($i);
-
-        $i = new ilNonEditableValueGUI();
-        $i->setInfo("<a href='" . $this->ctrl->getLinkTarget($this, "setStatusToFailed") . "'> " . $this->plugin->txt("set_failed"));
-        $form->addItem($i);
-
-        $i = new ilNonEditableValueGUI();
-        $i->setInfo("<a href='" . $this->ctrl->getLinkTarget($this, "setStatusToInProgress") . "'> " . $this->plugin->txt("set_in_progress"));
-        $form->addItem($i);
-
-        $i = new ilNonEditableValueGUI($this->plugin->txt("important"));
-        $i->setInfo($this->plugin->txt("lp_status_info"));
+        $i->setInfo("<h1> Hello World </h1>" . $this->plugin->txt("set_in_progress"));
         $form->addItem($i);
 
         $this->tpl->setContent($form->getHTML());

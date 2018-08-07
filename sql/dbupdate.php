@@ -24,8 +24,8 @@ $fields = array(
         'notnull' => false
     )
 );
-if (!$ilDB->tableExists("rep_robj_xtst_data")) {
-    $ilDB->createTable("rep_robj_xtst_data", $fields);
-    $ilDB->addPrimaryKey("rep_robj_xtst_data", array("id"));
+if (!$ilDB->tableExists("rep_robj_x3dv_data")) {
+    $ilDB->createTable("rep_robj_x3dv_data", $fields);
+    $ilDB->addPrimaryKey("rep_robj_x3dv_data", array("id"));
 }
 ?>
