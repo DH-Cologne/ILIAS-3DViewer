@@ -17,7 +17,7 @@ class ilObj3DViewerListGUI extends ilObjectPluginListGUI
      */
     function initType()
     {
-        $this->setType(il3DViewerPlugin::ID);
+        $this->setType(il3DViewerPlugin::PLUGIN_ID);
     }
 
     /**

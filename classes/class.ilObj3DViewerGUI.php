@@ -25,75 +25,25 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
     /** @var  ilTabsGUI */
     protected $tabs;
 
-    public function executeCommand()
-    {
-        global $tpl;
-
-
-        $next_class = $this->ctrl->getNextClass($this);
-        switch ($next_class) {
-            case 'ilexportgui':
-                // only if plugin supports it?
-                $tpl->setTitle($this->object->getTitle());
-                $tpl->setTitleIcon(ilObject::_getIcon($this->object->getId()));
-                $this->setLocator();
-                $tpl->getStandardTemplate();
-                $this->setTabs();
-                include_once './Services/Export/classes/class.ilExportGUI.php';
-                $this->tabs->activateTab("export");
-                $exp = new ilExportGUI($this);
-                $exp->addFormat('xml');
-                $this->ctrl->forwardCommand($exp);
-                $tpl->show();
-                return;
-                break;
-        }
-
-        $return_value = parent::executeCommand();
-
-        return $return_value;
-    }
 
     /**
      * Set tabs
      */
     function setTabs()
     {
-        global $ilCtrl, $ilAccess;
+        global $ilTabs, $ilCtrl, $ilAccess;
 
         // tab for the "show content" command
-        if ($ilAccess->checkAccess("read", "", $this->object->getRefId())) {
-            $this->tabs->addTab("content", $this->txt("content"), $ilCtrl->getLinkTarget($this, "showContent"));
-        }
+        $ilTabs->addTab("content", $this->txt("content"), $ilCtrl->getLinkTarget($this, "showContent"));
 
         // standard info screen tab
         $this->addInfoTab();
 
         // a "properties" tab
-        if ($ilAccess->checkAccess("write", "", $this->object->getRefId())) {
-            $this->tabs->addTab("properties", $this->txt("properties"), $ilCtrl->getLinkTarget($this, "editProperties"));
-            $this->tabs->addTab("export", $this->txt("export"), $ilCtrl->getLinkTargetByClass("ilexportgui", ""));
-        }
+        $ilTabs->addTab("properties", $this->txt("properties"), $ilCtrl->getLinkTarget($this, "editProperties"));
 
         // standard permission tab
         $this->addPermissionTab();
-        $this->activateTab();
-    }
-
-    /**
-     * We need this method if we can't access the tabs otherwise...
-     */
-    private function activateTab()
-    {
-        $next_class = $this->ctrl->getCmdClass();
-
-        switch ($next_class) {
-            case 'ilexportgui':
-                $this->tabs->activateTab("export");
-                break;
-        }
-
-        return;
     }
 
     /**
@@ -101,7 +51,7 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
      */
     final function getType()
     {
-        return il3DViewerPlugin::ID;
+        return il3DViewerPlugin::PLUGIN_ID;
     }
 
     /**
@@ -110,20 +60,11 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
     function performCommand($cmd)
     {
         switch ($cmd) {
-            case "editProperties":   // list all commands that need write permission here
+            case "editProperties":
             case "updateProperties":
-            case "saveProperties":
-            case "showExport":
-                $this->checkPermission("write");
                 $this->$cmd();
                 break;
-
-            case "showContent":   // list all commands that need read permission here
-            case "setStatusToCompleted":
-            case "setStatusToFailed":
-            case "setStatusToInProgress":
-            case "setStatusToNotAttempted":
-                $this->checkPermission("read");
+            case "showContent":
                 $this->$cmd();
                 break;
         }
@@ -137,6 +78,11 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
         return "editProperties";
     }
 
+    function getStandardCmd()
+    {
+        return "showContent";
+    }
+
 //
 // DISPLAY TABS
 //
@@ -146,10 +92,7 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
      */
     protected function afterConstructor()
     {
-        global $ilCtrl, $ilTabs, $tpl;
-        $this->ctrl = $ilCtrl;
-        $this->tabs = $ilTabs;
-        $this->tpl = $tpl;
+
     }
 
     /**
@@ -157,10 +100,12 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
      */
     protected function editProperties()
     {
-        $this->tabs->activateTab("properties");
-        $form = $this->initPropertiesForm();
-        $this->addValuesToForm($form);
-        $this->tpl->setContent($form->getHTML());
+        global $tpl, $ilTabs;
+
+        $ilTabs->activateTab("properties");
+        $this->initPropertiesForm();
+        $this->getPropertiesValues();
+        $tpl->setContent($this->form->getHTML());
     }
 
     /**
@@ -175,7 +120,7 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
         $title->setRequired(true);
         $form->addItem($title);
 
-        $description = new ilTextInputGUI($this->plugin->txt("description"), "description");
+        $description = new ilTextInputGUI($this->plugin->txt("description"), "desc");
         $form->addItem($description);
 
         $online = new ilCheckboxInputGUI($this->plugin->txt("online"), "online");
@@ -185,6 +130,39 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
         $form->addCommandButton("saveProperties", $this->plugin->txt("update"));
 
         return $form;
+    }
+
+    /**
+     * Get values for edit properties form
+     */
+    function getPropertiesValues()
+    {
+        $values["title"] = $this->object->getTitle();
+        $values["desc"] = $this->object->getDescription();
+        $values["online"] = $this->object->getOnline();
+
+        $this->form->setValuesByArray($values);
+    }
+
+    /**
+     * Update properties
+     */
+    public function updateProperties()
+    {
+        global $tpl, $lng, $ilCtrl;
+
+        $this->initPropertiesForm();
+        if ($this->form->checkInput()) {
+            $this->object->setTitle($this->form->getInput("title"));
+            $this->object->setDescription($this->form->getInput("desc"));
+            $this->object->setOnline($this->form->getInput("online"));
+
+            $this->object->update();
+            $ilCtrl->redirect($this, "editProperties");
+        }
+
+        $this->form->setValuesByPost();
+        $tpl->setContent($this->form->getHtml());
     }
 
     /**
@@ -229,6 +207,8 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
     protected function showContent()
     {
         $this->tabs->activateTab("content");
+        //$this->tpl->addCss("");
+        $this->tpl->addJavaScript("./Customizing/global/plugins/Services/Repository/RepositoryObject/3DViewer/js/il3DViewer.js");
 
         /** @var ilObj3DViewer $object */
         $object = $this->object;
@@ -240,87 +220,11 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
         $i->setInfo($object->getTitle());
         $form->addItem($i);
 
-        $i = new ilNonEditableValueGUI($this->plugin->txt("description"));
+        $i = new ilNonEditableValueGUI($this->plugin->txt("desc"));
         $i->setInfo($object->getDescription());
         $form->addItem($i);
 
-        $i = new ilNonEditableValueGUI($this->plugin->txt("online_status"));
-        $i->setInfo($object->isOnline() ? "Online" : "Offline");
-        $form->addItem($i);
-
-        global $ilUser;
-        $progress = new ilLPStatusPlugin($this->object->getId());
-        $status = $progress->determineStatus($this->object->getId(), $ilUser->getId());
-        $i = new ilNonEditableValueGUI($this->plugin->txt("lp_status"));
-        $i->setInfo($this->plugin->txt("lp_status_" . $status));
-        $form->addItem($i);
-
-        $i = new ilNonEditableValueGUI();
-        $i->setInfo("<a href='" . $this->ctrl->getLinkTarget($this, "setStatusToCompleted") . "'> " . $this->plugin->txt("set_completed"));
-        $form->addItem($i);
-
-        $i = new ilNonEditableValueGUI();
-        $i->setInfo("<a href='" . $this->ctrl->getLinkTarget($this, "setStatusToNotAttempted") . "'> " . $this->plugin->txt("set_not_attempted"));
-        $form->addItem($i);
-
-        $i = new ilNonEditableValueGUI();
-        $i->setInfo("<a href='" . $this->ctrl->getLinkTarget($this, "setStatusToFailed") . "'> " . $this->plugin->txt("set_failed"));
-        $form->addItem($i);
-
-        $i = new ilNonEditableValueGUI();
-        $i->setInfo("<a href='" . $this->ctrl->getLinkTarget($this, "setStatusToInProgress") . "'> " . $this->plugin->txt("set_in_progress"));
-        $form->addItem($i);
-
-        $i = new ilNonEditableValueGUI($this->plugin->txt("important"));
-        $i->setInfo($this->plugin->txt("lp_status_info"));
-        $form->addItem($i);
-
         $this->tpl->setContent($form->getHTML());
-    }
-
-    protected function showExport()
-    {
-        require_once("./Services/Export/classes/class.ilExportGUI.php");
-        $export = new ilExportGUI($this);
-        $export->addFormat("xml");
-        $ret = $this->ctrl->forwardCommand($export);
-
-    }
-
-    protected function setStatusToFailed()
-    {
-        $this->setStatusAndRedirect(ilLPStatus::LP_STATUS_FAILED_NUM);
-    }
-
-    protected function setStatusToInProgress()
-    {
-        $this->setStatusAndRedirect(ilLPStatus::LP_STATUS_IN_PROGRESS_NUM);
-    }
-
-    protected function setStatusToNotAttempted()
-    {
-        $this->setStatusAndRedirect(ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM);
-    }
-
-    private function setStatusToCompleted()
-    {
-        $this->setStatusAndRedirect(ilLPStatus::LP_STATUS_COMPLETED_NUM);
-    }
-
-    private function setStatusAndRedirect($status)
-    {
-        global $ilUser;
-        $_SESSION[self::LP_SESSION_ID] = $status;
-        ilLPStatusWrapper::_updateStatus($this->object->getId(), $ilUser->getId());
-        $this->ctrl->redirect($this, $this->getStandardCmd());
-    }
-
-    /**
-     * Get standard command
-     */
-    function getStandardCmd()
-    {
-        return "showContent";
     }
 }
 

@@ -37,6 +37,7 @@ class ilObj3DViewerAccess extends ilObjectPluginAccess implements ilConditionHan
      */
     public static function checkCondition($a_trigger_obj_id, $a_operator, $a_value, $a_usr_id)
     {
+        /*
         $ref_id = array_shift(ilObject::_getAllReferences($a_trigger_obj_id));
         $object = new ilObj3DViewer($ref_id);
         switch ($a_operator) {
@@ -44,7 +45,7 @@ class ilObj3DViewerAccess extends ilObjectPluginAccess implements ilConditionHan
                 return $object->getLPStatusForUser($a_usr_id) == ilLPStatus::LP_STATUS_COMPLETED_NUM;
             case ilConditionHandler::OPERATOR_FAILED:
                 return $object->getLPStatusForUser($a_usr_id) == ilLPStatus::LP_STATUS_FAILED_NUM;
-        }
+        }*/
         return false;
     }
 
@@ -64,6 +65,7 @@ class ilObj3DViewerAccess extends ilObjectPluginAccess implements ilConditionHan
      */
     function _checkAccess($a_cmd, $a_permission, $a_ref_id, $a_obj_id, $a_user_id = 0)
     {
+        /*
         global $ilUser, $ilAccess;
 
         if ($a_user_id == 0) {
@@ -77,7 +79,7 @@ class ilObj3DViewerAccess extends ilObjectPluginAccess implements ilConditionHan
                     return false;
                 }
                 break;
-        }
+        }*/
 
         return true;
     }
@@ -88,13 +90,15 @@ class ilObj3DViewerAccess extends ilObjectPluginAccess implements ilConditionHan
      */
     static function checkOnline($a_id)
     {
+        /*
         global $ilDB;
 
         $set = $ilDB->query("SELECT is_online FROM rep_robj_x3dv_data " .
             " WHERE id = " . $ilDB->quote($a_id, "integer")
         );
         $rec = $ilDB->fetchAssoc($set);
-        return (boolean)$rec["is_online"];
+        return (boolean)$rec["is_online"];*/
+        return true;
     }
 }
 
