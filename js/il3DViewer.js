@@ -1,5 +1,7 @@
 const testFunction = () => {
-    console.log('Testing');
+    console.log('3D Viewer JavaScript loaded');
 };
 
-testFunction();
+window.onload = () => {
+    testFunction();
+};

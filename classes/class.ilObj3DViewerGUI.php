@@ -139,7 +139,7 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
     {
         $values["title"] = $this->object->getTitle();
         $values["desc"] = $this->object->getDescription();
-        $values["online"] = $this->object->getOnline();
+        //$values["online"] = $this->object->getOnline();
 
         $this->form->setValuesByArray($values);
     }
@@ -206,25 +206,34 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
 
     protected function showContent()
     {
+        global $ilUser, $lng;
+        $x3dv_url = 'http://heyitsbatman.ddns.net:4200/';
+        /** @var ilObj3DViewer $object */
         $this->tabs->activateTab("content");
         //$this->tpl->addCss("");
         $this->tpl->addJavaScript("./Customizing/global/plugins/Services/Repository/RepositoryObject/3DViewer/js/il3DViewer.js");
 
-        /** @var ilObj3DViewer $object */
-        $object = $this->object;
+        $tx3dv = new ilTemplate("tpl.x3dv.html", true, true, "Customizing/global/plugins/Services/Repository/RepositoryObject/3DViewer");
+        //$tx3dv->setVariable("ENTER_FULLSCREEN",$this->txt("enter_fullscreen"));
+        //$tx3dv->setVariable("LEAVE_FULLSCREEN",$this->txt("leave_fullscreen"));
+        $tx3dv->setVariable("USER_NAME", rawurlencode($ilUser->firstname . ' ' . $ilUser->lastname));
+        $tx3dv->setVariable("LANGUAGE", $lng->getUserLanguage());
+        $tx3dv->setVariable("X3DV_URL", $x3dv_url);
+        $this->tpl->setContent($tx3dv->get());
+        /*
+                $form = new ilPropertyFormGUI();
+                $form->setTitle($object->getTitle());
 
-        $form = new ilPropertyFormGUI();
-        $form->setTitle($object->getTitle());
+                $i = new ilNonEditableValueGUI($this->plugin->txt("title"));
+                $i->setInfo($object->getTitle());
+                $form->addItem($i);
 
-        $i = new ilNonEditableValueGUI($this->plugin->txt("title"));
-        $i->setInfo($object->getTitle());
-        $form->addItem($i);
+                $i = new ilNonEditableValueGUI($this->plugin->txt("desc"));
+                $i->setInfo($object->getDescription());
+                $form->addItem($i);
 
-        $i = new ilNonEditableValueGUI($this->plugin->txt("desc"));
-        $i->setInfo($object->getDescription());
-        $form->addItem($i);
-
-        $this->tpl->setContent($form->getHTML());
+                $this->tpl->setContent($form->getHTML());
+        */
     }
 }
 

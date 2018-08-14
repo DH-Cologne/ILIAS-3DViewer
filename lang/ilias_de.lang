@@ -1,20 +1,20 @@
-obj_x3dv#:#Test Repository Object
-objs_x3dv#:#Test Repository Objects
+obj_x3dv#:#3D Viewer
+objs_x3dv#:#3D Viewers
 obj_x3dv_duplicate#:#Kopieren
-objs_x3dv_duplicate#:#Kopiere Test Repository Objects
-obj_x3dv_select#:#Wähle Test Repository Object
-x3dv_add#:#Test Repository Object hinzufügen
-x3dv_new#:#Neues Test Repository Object
-x3dv_read#:#Lesezugriff auf Test Repository Object
-x3dv_write#:#Test Repository Object bearbeiten
-x3dv_delete#:#Test Repository Object löschen
-x3dv_visible#:#Test Repository Object ist sichtbar
+objs_x3dv_duplicate#:#Kopiere 3D Viewers
+obj_x3dv_select#:#Wähle 3D Viewer
+x3dv_add#:#3D Viewer hinzufügen
+x3dv_new#:#Neues 3D Viewer
+x3dv_read#:#Lesezugriff auf 3D Viewer
+x3dv_write#:#3D Viewer bearbeiten
+x3dv_delete#:#3D Viewer löschen
+x3dv_visible#:#3D Viewer ist sichtbar
 x3dv_edit_permission#:#Zugriffsrecht bearbeiten
-crs_create_x3dv#:#Erstelle Test Repository Object
-grp_create_x3dv#:#Erstelle Test Repository Object
-fold_create_x3dv#:#Erstelle Test Repository Object
-root_create_x3dv#:#Erstelle Test Repository Object
-cat_create_x3dv#:#Erstelle Test Repository Object
+crs_create_x3dv#:#Erstelle 3D Viewer
+grp_create_x3dv#:#Erstelle 3D Viewer
+fold_create_x3dv#:#Erstelle 3D Viewer
+root_create_x3dv#:#Erstelle 3D Viewer
+cat_create_x3dv#:#Erstelle 3D Viewer
 title#:#Titel
 description#:#Beschreibung
 online#:#Online
