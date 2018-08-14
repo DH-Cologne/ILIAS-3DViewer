@@ -95,7 +95,7 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
 
     }
 
-    /**
+    /** TODO: Handle Properties (if needed)
      * Edit Properties. This commands uses the form class to display an input form.
      */
     protected function editProperties()
@@ -132,7 +132,7 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
         return $form;
     }
 
-    /**
+    /** TODO: Handle Properties (if needed)
      * Get values for edit properties form
      */
     function getPropertiesValues()
@@ -144,7 +144,7 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
         $this->form->setValuesByArray($values);
     }
 
-    /**
+    /** TODO: Handle Properties (if needed)
      * Update properties
      */
     public function updateProperties()
@@ -178,7 +178,7 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
     }
 
     /**
-     *
+     * TODO: Handle Properties (if needed)
      */
     protected function saveProperties()
     {
@@ -204,9 +204,18 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
         $object->setOnline($form->getInput('online'));
     }
 
+    /* Author: Kai Niebes
+     * - Set the 3D Viewers URL
+     * this URL will be inserted into the HTML Template
+     * - Load external JavaScript
+     * for testing purposes, can later be used to issue requests to the 3D Viewer REST API
+     * - Access information of the logged-in User
+     */
     protected function showContent()
     {
         global $ilUser, $lng;
+
+
         $x3dv_url = 'http://heyitsbatman.ddns.net:4200/';
         /** @var ilObj3DViewer $object */
         $this->tabs->activateTab("content");
@@ -214,26 +223,10 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
         $this->tpl->addJavaScript("./Customizing/global/plugins/Services/Repository/RepositoryObject/3DViewer/js/il3DViewer.js");
 
         $tx3dv = new ilTemplate("tpl.x3dv.html", true, true, "Customizing/global/plugins/Services/Repository/RepositoryObject/3DViewer");
-        //$tx3dv->setVariable("ENTER_FULLSCREEN",$this->txt("enter_fullscreen"));
-        //$tx3dv->setVariable("LEAVE_FULLSCREEN",$this->txt("leave_fullscreen"));
         $tx3dv->setVariable("USER_NAME", rawurlencode($ilUser->firstname . ' ' . $ilUser->lastname));
         $tx3dv->setVariable("LANGUAGE", $lng->getUserLanguage());
         $tx3dv->setVariable("X3DV_URL", $x3dv_url);
         $this->tpl->setContent($tx3dv->get());
-        /*
-                $form = new ilPropertyFormGUI();
-                $form->setTitle($object->getTitle());
-
-                $i = new ilNonEditableValueGUI($this->plugin->txt("title"));
-                $i->setInfo($object->getTitle());
-                $form->addItem($i);
-
-                $i = new ilNonEditableValueGUI($this->plugin->txt("desc"));
-                $i->setInfo($object->getDescription());
-                $form->addItem($i);
-
-                $this->tpl->setContent($form->getHTML());
-        */
     }
 }
 
