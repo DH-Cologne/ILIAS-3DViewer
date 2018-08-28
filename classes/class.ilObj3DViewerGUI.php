@@ -216,7 +216,7 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
         global $ilUser, $lng;
 
 
-        $x3dv_url = 'http://heyitsbatman.ddns.net:4200/';
+        $x3dv_url = 'https://blacklodge.hki.uni-koeln.de/builds/Kompakkt/live/';
         /** @var ilObj3DViewer $object */
         $this->tabs->activateTab("content");
         //$this->tpl->addCss("");
