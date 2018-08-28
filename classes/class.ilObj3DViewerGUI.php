@@ -137,11 +137,11 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
      */
     function getPropertiesValues()
     {
-        $values["title"] = $this->object->getTitle();
-        $values["desc"] = $this->object->getDescription();
+        //$values["title"] = $this->object->getTitle();
+        //$values["desc"] = $this->object->getDescription();
         //$values["online"] = $this->object->getOnline();
 
-        $this->form->setValuesByArray($values);
+        //$this->form->setValuesByArray($values);
     }
 
     /** TODO: Handle Properties (if needed)
