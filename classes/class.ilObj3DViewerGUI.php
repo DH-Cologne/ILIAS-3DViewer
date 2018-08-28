@@ -100,12 +100,12 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
      */
     protected function editProperties()
     {
-        global $tpl, $ilTabs;
+        /*global $tpl, $ilTabs;
 
         $ilTabs->activateTab("properties");
         $this->initPropertiesForm();
         $this->getPropertiesValues();
-        $tpl->setContent($this->form->getHTML());
+        $tpl->setContent($this->form->getHTML());*/
     }
 
     /**
