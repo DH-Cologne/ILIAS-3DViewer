@@ -1,6 +1,9 @@
 #3DViewer
-### Warning
-The contents of this repository are currently under development and should not be used in a production environment
+### Description
+This plugin adds an ILIAS Repository Object called "3D Viewer" which integrates
+the Uni Köln Kompakkt Viewer to ILIAS.
+While this ILIAS plugin is mostly feature complete, the Kompakkt Viewer is not.
+Once the Kompakkt Viewer is finished, this plugin will be aswell.
 
 -------------------
 ### Installation 
