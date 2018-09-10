@@ -18,6 +18,8 @@ cat_create_x3dv#:#Create 3D Viewer
 title#:#Title
 description#:#Description
 online#:#Online
+repository_id#:#Repository ID (if available)
+repository_passcode#:#Repository Passcode (if available)
 save#:#Save
 update#:#Update
 properties#:#Properties
@@ -40,4 +42,4 @@ offline:#:Offline
 important#:#Important
 online_status#:#Online Status
 lp_status#:#Learning Progress
-update_successful#:Update Successful
+update_successful#:#Update Successful

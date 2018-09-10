@@ -18,6 +18,8 @@ cat_create_x3dv#:#Erstelle 3D Viewer
 title#:#Titel
 description#:#Beschreibung
 online#:#Online
+repository_id#:#Repository ID (falls vorhanden)
+repository_passcode#:#Repository Passcode (falls vorhanden)
 save#:#Speichern
 update#:#Update
 properties#:#Eigenschaften
@@ -40,4 +42,4 @@ offline:#:Offline
 important#:#Wichtig
 online_status#:#Online Status
 lp_status#:#Lernfortschritt
-update_successful#:Die Änderungen wurden gespeichert.
+update_successful#:#Die Änderungen wurden gespeichert.

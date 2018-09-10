@@ -20,7 +20,7 @@ class ilObj3DViewer extends ilObjectPlugin implements ilLPStatusPluginInterface
     }
 
     /**
-     * Get type.
+     * Set type.
      */
     final function initType()
     {
@@ -32,17 +32,27 @@ class ilObj3DViewer extends ilObjectPlugin implements ilLPStatusPluginInterface
      */
     function doCreate()
     {
-        /* TODO: Check if needed
         global $ilDB;
 
-        $ilDB->manipulate("INSERT INTO rep_robj_x3dv_data " .
-            "(id, is_online, option_one, option_two) VALUES (" .
-            $ilDB->quote($this->getId(), "integer") . "," .
-            $ilDB->quote(0, "integer") . "," .
-            $ilDB->quote("default 1", "text") . "," .
-            $ilDB->quote("default 2", "text") .
-            ")");
-        */
+		// Prepare SQL ID Integer Object for identification and empty text objects for repository data
+		$temp_id = $ilDB->quote($this->getId(), "integer");
+		$temp_online = $ilDB->quote(0, "integer");
+		$temp_text = $ilDB->quote("", "text");
+		
+		$query = "
+		INSERT INTO rep_robj_x3dv_data
+		            (id,
+		             is_online,
+		             repository_id,
+		             repository_passcode)
+		VALUES      ({$temp_id},
+		             {$temp_online},
+		             {$temp_text},
+		             {$temp_text})
+		;";
+		
+        // Run Query
+        $ilDB->manipulate($query);
     }
 
     /**
@@ -50,15 +60,18 @@ class ilObj3DViewer extends ilObjectPlugin implements ilLPStatusPluginInterface
      */
     function doRead()
     {
-        /* TODO: Check if needed
         global $ilDB;
 
-        $set = $ilDB->query("SELECT * FROM rep_robj_x3dv_data " .
-            " WHERE id = " . $ilDB->quote($this->getId(), "integer")
-        );
+        $query = "
+        SELECT *
+        FROM   rep_robj_x3dv_data
+        WHERE  id = {$ilDB->quote($this->getId(), "integer")}  
+        ";
+
+        $set = $ilDB->query($query);
         while ($rec = $ilDB->fetchAssoc($set)) {
             $this->setOnline($rec["is_online"]);
-        }*/
+        }
     }
 
     /**
@@ -68,7 +81,7 @@ class ilObj3DViewer extends ilObjectPlugin implements ilLPStatusPluginInterface
      */
     function setOnline($a_val)
     {
-        /*$this->online = $a_val;*/
+        $this->online = $a_val;
     }
 
     /**
@@ -76,14 +89,15 @@ class ilObj3DViewer extends ilObjectPlugin implements ilLPStatusPluginInterface
      */
     function doUpdate()
     {
-        /*
         global $ilDB;
 
-        $ilDB->manipulate($up = "UPDATE rep_robj_x3dv_data SET " .
-            " is_online = " . $ilDB->quote($this->isOnline(), "integer") . "" .
-            " WHERE id = " . $ilDB->quote($this->getId(), "integer")
-        );
-        */
+        $query = "
+        UPDATE rep_robj_x3dv_data
+        SET    is_online = {$ilDB->quote($this->isOnline(), "integer")}
+        WHERE  id = {$ilDB->quote($this->getId(), "integer")}  
+        ";
+
+        $ilDB->manipulate($query);
     }
 
     /**
@@ -93,7 +107,7 @@ class ilObj3DViewer extends ilObjectPlugin implements ilLPStatusPluginInterface
      */
     function isOnline()
     {
-        /*return $this->online;*/
+        return $this->online;
     }
 
     /**
@@ -101,13 +115,14 @@ class ilObj3DViewer extends ilObjectPlugin implements ilLPStatusPluginInterface
      */
     function doDelete()
     {
-        /*
         global $ilDB;
 
-        $ilDB->manipulate("DELETE FROM rep_robj_x3dv_data WHERE " .
-            " id = " . $ilDB->quote($this->getId(), "integer")
-        );
-        */
+        $query = "
+        DELETE FROM rep_robj_x3dv_data
+        WHERE  id = {$ilDB->quote($this->getId(), "integer")}  
+        ";
+
+        $ilDB->manipulate($query);
     }
 
     /**
@@ -115,13 +130,12 @@ class ilObj3DViewer extends ilObjectPlugin implements ilLPStatusPluginInterface
      */
     function doCloneObject($new_obj, $a_target_id, $a_copy_id = null)
     {
-        /*
         global $ilDB;
 
         $new_obj->setOnline($this->isOnline());
-        $new_obj->setOptionOne($this->getOptionOne());
-        $new_obj->setOptionTwo($this->getOptionTwo());
-        $new_obj->update();*/
+        $new_obj->setRepositoryID($this->getRepositoryIDString());
+        $new_obj->setRepositoryPasscode($this->getRepositoryPasscodeString());
+        $new_obj->update();
     }
 
     /**
@@ -172,13 +186,95 @@ class ilObj3DViewer extends ilObjectPlugin implements ilLPStatusPluginInterface
      */
     public function getLPStatusForUser($a_user_id)
     {
-        /*
         global $ilUser;
         if ($ilUser->getId() == $a_user_id)
             return $_SESSION[ilObj3DViewerGUI::LP_SESSION_ID];
         else
             return ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM;
-        */
+    }
+
+    /**
+     * Get 3D Viewer Repository ID
+     * @return ilDBStatement Result ID 
+     */
+    public function getRepositoryID() {
+        global $ilDB;
+
+        $query = "
+        SELECT repository_id
+        FROM   rep_robj_x3dv_data
+        WHERE  id = {$ilDB->quote($this->getId(), "integer")}  
+        ";
+
+        return $ilDB->query($query);
+    }
+
+    /**
+     * Sets 3D Viewer Repository ID
+     * @param string $repository_id ID of the repository
+     */
+    public function setRepositoryID($repository_id) {
+        global $ilDB;
+
+        $query = "
+        UPDATE  rep_robj_x3dv_data
+        SET     repository_id = {$ilDB->quote($repository_id,"text")}
+        WHERE   id = {$ilDB->quote($this->getId(), "integer")}
+        ";
+
+        $ilDB->manipulate($query);
+    }
+
+    /**
+     * Gets 3D Viewer Repository Passcode
+     * @return ilDBStatement Result Passcode
+     */
+    public function getRepositoryPasscode() {
+        global $ilDB;
+
+        $query = "
+        SELECT repository_passcode
+        FROM   rep_robj_x3dv_data
+        WHERE  id = {$ilDB->quote($this->getId(), "integer")}
+        ";
+
+        return $ilDB->query($query);
+    }
+
+    /**
+     * Sets 3D Viewer Repository Passcode
+     * @param string $repository_passcode Passcode of the repository
+     */
+    public function setRepositoryPasscode($repository_passcode) {
+        global $ilDB;
+
+        $query = "
+        UPDATE  rep_robj_x3dv_data
+        SET     repository_passcode = {$ilDB->quote($repository_passcode,"text")}
+        WHERE   id = {$ilDB->quote($this->getId(), "integer")}
+        ";
+
+        $ilDB->manipulate($query);
+    } 
+
+    /**
+     * Gets the ID as String
+     * @return string ID Result
+     */
+    public function getRepositoryIDString() {
+        global $ilDB;
+
+        return $ilDB->fetchAssoc($this->getRepositoryID())["repository_id"];
+    }
+
+    /**
+     * Gets the Passcode as String
+     * @return string Passcode Result
+     */
+    public function getRepositoryPasscodeString() {
+        global $ilDB;
+
+        return $ilDB->fetchAssoc($this->getRepositoryPasscode())["repository_passcode"];
     }
 }
 

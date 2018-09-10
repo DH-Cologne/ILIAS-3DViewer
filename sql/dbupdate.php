@@ -1,6 +1,5 @@
 <#1>
 <?php
-/*
 $fields = array(
     'id' => array(
         'type' => 'integer',
@@ -12,15 +11,15 @@ $fields = array(
         'length' => 1,
         'notnull' => false
     ),
-    'option_one' => array(
+    'repository_id' => array(
         'type' => 'text',
-        'length' => 10,
+        'length' => 50,
         'fixed' => false,
         'notnull' => false
     ),
-    'option_two' => array(
+    'repository_passcode' => array(
         'type' => 'text',
-        'length' => 10,
+        'length' => 50,
         'fixed' => false,
         'notnull' => false
     )
@@ -29,5 +28,4 @@ if (!$ilDB->tableExists("rep_robj_x3dv_data")) {
     $ilDB->createTable("rep_robj_x3dv_data", $fields);
     $ilDB->addPrimaryKey("rep_robj_x3dv_data", array("id"));
 }
-*/
 ?>

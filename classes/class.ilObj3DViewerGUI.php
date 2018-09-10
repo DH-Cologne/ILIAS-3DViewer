@@ -8,6 +8,7 @@ require_once("./Services/Tracking/classes/class.ilLearningProgress.php");
 require_once("./Services/Tracking/classes/class.ilLPStatusWrapper.php");
 require_once("./Services/Tracking/classes/status/class.ilLPStatusPlugin.php");
 require_once("./Customizing/global/plugins/Services/Repository/RepositoryObject/3DViewer/classes/class.il3DViewerPlugin.php");
+require_once("./Customizing/global/plugins/Services/Repository/RepositoryObject/3DViewer/classes/class.ilObj3DViewer.php");
 require_once("./Services/Form/classes/class.ilPropertyFormGUI.php");
 require_once("./Services/Form/classes/class.ilNonEditableValueGUI.php");
 
@@ -16,77 +17,7 @@ require_once("./Services/Form/classes/class.ilNonEditableValueGUI.php");
  * @ilCtrl_Calls ilObj3DViewerGUI: ilPermissionGUI, ilInfoScreenGUI, ilObjectCopyGUI, ilCommonActionDispatcherGUI, ilExportGUI
  */
 class ilObj3DViewerGUI extends ilObjectPluginGUI
-{
-    const LP_SESSION_ID = 'x3dv_lp_session_state';
-    /** @var  ilTemplate */
-    public $tpl;
-    /** @var  ilCtrl */
-    protected $ctrl;
-    /** @var  ilTabsGUI */
-    protected $tabs;
-
-
-    /**
-     * Set tabs
-     */
-    function setTabs()
-    {
-        global $ilTabs, $ilCtrl, $ilAccess;
-
-        // tab for the "show content" command
-        $ilTabs->addTab("content", $this->txt("content"), $ilCtrl->getLinkTarget($this, "showContent"));
-
-        // standard info screen tab
-        $this->addInfoTab();
-
-        // a "properties" tab
-        $ilTabs->addTab("properties", $this->txt("properties"), $ilCtrl->getLinkTarget($this, "editProperties"));
-
-        // standard permission tab
-        $this->addPermissionTab();
-    }
-
-    /**
-     * Get type.
-     */
-    final function getType()
-    {
-        return il3DViewerPlugin::PLUGIN_ID;
-    }
-
-    /**
-     * Handles all commmands of this class, centralizes permission checks
-     */
-    function performCommand($cmd)
-    {
-        switch ($cmd) {
-            case "editProperties":
-            case "updateProperties":
-                $this->$cmd();
-                break;
-            case "showContent":
-                $this->$cmd();
-                break;
-        }
-    }
-
-    /**
-     * After object has been created -> jump to this command
-     */
-    function getAfterCreationCmd()
-    {
-        return "editProperties";
-    }
-
-    function getStandardCmd()
-    {
-        return "showContent";
-    }
-
-//
-// DISPLAY TABS
-//
-
+{    
     /**
      * Initialisation
      */
@@ -94,18 +25,67 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
     {
 
     }
-
+    /**
+     * Handles all commmands of this class, centralizes permission checks
+     */
+    function performCommand($cmd)
+    {
+        switch ($cmd)
+        {
+            case "editProperties":   // list all commands that need write permission here
+            case "updateProperties":
+            case "saveProperties":
+            case "showExport":
+                $this->checkPermission("write");
+                $this->$cmd();
+                break;
+ 
+            case "showContent":   // list all commands that need read permission here
+            case "setStatusToCompleted":
+            case "setStatusToFailed":
+            case "setStatusToInProgress":
+            case "setStatusToNotAttempted":
+                $this->checkPermission("read");
+                $this->$cmd();
+                break;
+        }
+    }
+ 
+    /**
+     * Get type.
+     */
+    final function getType()
+    {
+        return "x3dv";
+    }
+    /**
+     * After object has been created -> jump to this command
+     */
+    function getAfterCreationCmd()
+    {
+        return "editProperties";
+    }
+    /**
+     * Get standard command
+     */
+    function getStandardCmd()
+    {
+        return "showContent";
+    }    
+//
+// DISPLAY TABS
+//
     /** TODO: Handle Properties (if needed)
      * Edit Properties. This commands uses the form class to display an input form.
      */
     protected function editProperties()
     {
-        /*global $tpl, $ilTabs;
+        global $tpl, $ilTabs;
 
         $ilTabs->activateTab("properties");
-        $this->initPropertiesForm();
-        $this->getPropertiesValues();
-        $tpl->setContent($this->form->getHTML());*/
+        $form = $this->initPropertiesForm();
+        $this->addValuesToForm($form);
+        $tpl->setContent($form->getHTML());
     }
 
     /**
@@ -126,25 +106,19 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
         $online = new ilCheckboxInputGUI($this->plugin->txt("online"), "online");
         $form->addItem($online);
 
+        $repository_id = new ilTextInputGUI($this->plugin->txt("repository_id"), "repository_id");
+        $form->addItem($repository_id);
+
+        $repository_passcode = new ilTextInputGUI($this->plugin->txt("repository_passcode"), "repository_passcode");
+        $form->addItem($repository_passcode);
+
         $form->setFormAction($this->ctrl->getFormAction($this, "saveProperties"));
         $form->addCommandButton("saveProperties", $this->plugin->txt("update"));
 
         return $form;
     }
 
-    /** TODO: Handle Properties (if needed)
-     * Get values for edit properties form
-     */
-    function getPropertiesValues()
-    {
-        //$values["title"] = $this->object->getTitle();
-        //$values["desc"] = $this->object->getDescription();
-        //$values["online"] = $this->object->getOnline();
-
-        //$this->form->setValuesByArray($values);
-    }
-
-    /** TODO: Handle Properties (if needed)
+    /**
      * Update properties
      */
     public function updateProperties()
@@ -156,6 +130,9 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
             $this->object->setTitle($this->form->getInput("title"));
             $this->object->setDescription($this->form->getInput("desc"));
             $this->object->setOnline($this->form->getInput("online"));
+
+            $this->object->setRepositoryID($this->form->getInput("repository_id"));
+            $this->object->setRepositoryPasscode($this->form->getInput("repository_passcode"));
 
             $this->object->update();
             $ilCtrl->redirect($this, "editProperties");
@@ -174,11 +151,13 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
             "title" => $this->object->getTitle(),
             "description" => $this->object->getDescription(),
             "online" => $this->object->isOnline(),
+            "repository_id" => $this->object->getRepositoryIDString(),
+            "repository_passcode" => $this->object->getRepositoryPasscodeString()
         ));
     }
 
     /**
-     * TODO: Handle Properties (if needed)
+     * Save Properties
      */
     protected function saveProperties()
     {
@@ -202,32 +181,44 @@ class ilObj3DViewerGUI extends ilObjectPluginGUI
         $object->setTitle($form->getInput('title'));
         $object->setDescription($form->getInput('description'));
         $object->setOnline($form->getInput('online'));
+        $object->setRepositoryID($form->getInput('repository_id'));
+        $object->setRepositoryPasscode($form->getInput('repository_passcode'));
     }
 
-    /* Author: Kai Niebes
-     * - Set the 3D Viewers URL
-     * this URL will be inserted into the HTML Template
-     * - Load external JavaScript
-     * for testing purposes, can later be used to issue requests to the 3D Viewer REST API
-     * - Access information of the logged-in User
+    /**
+     * - Displays the 3D Viewer using an HTML Template
+     * - Inserts the correct URL, depending on whether
+     *     - User wants to load no specific repository (Case: No ID or Passcode)
+     *     - User wants to load specific public repository (Case: No Passcode)
+     *     - USer wants to load specific private repository (Case: Both ID and Passcode)
+     * - Shows the user the 3D Viewer iframe
      */
     protected function showContent()
     {
-        global $ilUser, $lng;
+        // Get ID  and Passcode as String
+        $temp_id = $this->object->getRepositoryIDString();
+        $temp_passcode = $this->object->getRepositoryPasscodeString();
 
+        // Set vanilla URL
+        $base_url = "https://blacklodge.hki.uni-koeln.de/builds/Kompakkt/live/";
 
-        $x3dv_url = 'https://blacklodge.hki.uni-koeln.de/builds/Kompakkt/live/';
-        /** @var ilObj3DViewer $object */
+        // Find correct case
+        if (strlen($temp_passcode) > 0 && strlen($temp_id) > 0) {        
+            $x3dv_url = $base_url . "object/" . $temp_id . "/" . $temp_passcode;
+        }
+        else if (strlen($temp_id) > 0) {
+            $x3dv_url = $base_url . "object/" . $temp_id;
+        }
+        else {
+            $x3dv_url = $base_url;
+        }
+
+        // Display content and insert HTML
         $this->tabs->activateTab("content");
-        //$this->tpl->addCss("");
-        $this->tpl->addJavaScript("./Customizing/global/plugins/Services/Repository/RepositoryObject/3DViewer/js/il3DViewer.js");
-
         $tx3dv = new ilTemplate("tpl.x3dv.html", true, true, "Customizing/global/plugins/Services/Repository/RepositoryObject/3DViewer");
-        $tx3dv->setVariable("USER_NAME", rawurlencode($ilUser->firstname . ' ' . $ilUser->lastname));
-        $tx3dv->setVariable("LANGUAGE", $lng->getUserLanguage());
         $tx3dv->setVariable("X3DV_URL", $x3dv_url);
         $this->tpl->setContent($tx3dv->get());
-    }
+    }    
 }
 
 ?>
