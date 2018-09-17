@@ -119,7 +119,7 @@ class ilObj3DViewer extends ilObjectPlugin implements ilLPStatusPluginInterface
 
         $query = "
         DELETE FROM rep_robj_x3dv_data
-        WHERE  id = {$ilDB->quote($this->getId(), "integer")}  
+        WHERE id = {$ilDB->quote($this->getId(), "integer")}  
         ";
 
         $ilDB->manipulate($query);
